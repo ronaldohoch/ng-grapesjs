@@ -4,20 +4,30 @@
 <div id="gjs">
   <h1>Hello World Component!</h1>
 </div>
-<div id="block2"></div>
 
 <div style="display: block;">
-  <!-- Vue app  -->
-  <div class="blocks-wrp">
-    Custom Blocks
-    <div class="blocks">
-      <div *ngFor="let block of editorCustomBlocks" class="block"
-        draggable (dragstart)="editorCustomBlocksOnDragStart(block)" (dragstop)="editorCustomBlocksOnDragStop(block)">
-        <!-- @dragstart="onDragStart(block)" @dragend="onDragStop()" draggable -->
-        <div class="block-media" [innerHTML]="block.getMedia() | sanitize:'html'"></div>
-        <div class="block-label">{{block.getLabel()}}</div>
-        <div class="block-cat">CAT: {{block.getCategoryLabel()}}</div>
-      </div>
-    </div>
+  <div class="blocks-wrp" #blocksWrapper>
+    <mat-accordion *ngIf="editorCustomBlocksCategorys">
+      <mat-expansion-panel *ngFor="let category of editorCustomBlocksCategorys | pipeObjectKeys">
+        <mat-expansion-panel-header>
+          <mat-panel-title>
+            {{category}}
+          </mat-panel-title>
+        </mat-expansion-panel-header>
+        <div class="blocks">
+          <div *ngFor="let block of editorCustomBlocksCategorys[category]" class="block"
+            matRipple
+            draggable="true" (dragstart)="editorCustomBlocksOnDragStart(block)" (dragstop)="editorCustomBlocksOnDragStop(block)"
+            >
+            <div class="item" *cdkDragPlaceholder>
+              <div class="block-media" [innerHTML]="block.getMedia() | sanitize:'html'"></div>
+              <div class="block-label">{{block.getLabel()}}</div>
+            </div>
+            <div class="block-media" [innerHTML]="block.getMedia() | sanitize:'html'"></div>
+            <div class="block-label">{{block.getLabel()}}</div>
+          </div>
+        </div>
+      </mat-expansion-panel>
+    </mat-accordion>
   </div>
 </div>

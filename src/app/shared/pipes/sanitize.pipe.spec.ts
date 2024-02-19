@@ -7,6 +7,7 @@ describe('SanitizePipe', () => {
   let pipe: SanitizePipe;
   beforeEach(() => {
     TestBed.configureTestingModule({
+      imports:[SanitizePipe],
       declarations: [SanitizePipe],
       providers: [
         SanitizePipe,
