@@ -1,0 +1,23 @@
+<div class="panel__top">
+  <div class="panel__basic-actions"></div>
+</div>
+<div id="gjs">
+  <h1>Hello World Component!</h1>
+</div>
+<div id="block2"></div>
+
+<div style="display: block;">
+  <!-- Vue app  -->
+  <div class="blocks-wrp">
+    Custom Blocks
+    <div class="blocks">
+      <div *ngFor="let block of editorCustomBlocks" class="block"
+        draggable (dragstart)="editorCustomBlocksOnDragStart(block)" (dragstop)="editorCustomBlocksOnDragStop(block)">
+        <!-- @dragstart="onDragStart(block)" @dragend="onDragStop()" draggable -->
+        <div class="block-media" [innerHTML]="block.getMedia() | sanitize:'html'"></div>
+        <div class="block-label">{{block.getLabel()}}</div>
+        <div class="block-cat">CAT: {{block.getCategoryLabel()}}</div>
+      </div>
+    </div>
+  </div>
+</div>
