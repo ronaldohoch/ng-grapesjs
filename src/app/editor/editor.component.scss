@@ -37,3 +37,19 @@
   display: grid;
   grid-template-columns: repeat(2,1fr);
 }
+/* Style Manager*/
+.styles{
+  text-align: left;
+}
+/*Radio sample*/
+.example-radio-group-label{text-align: left;}
+.example-radio-group {
+  display: flex;
+  flex-direction: column;
+  margin: 15px 0;
+  align-items: flex-start;
+}
+
+.example-radio-button {
+  margin: 5px;
+}
