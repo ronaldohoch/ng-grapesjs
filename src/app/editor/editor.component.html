@@ -80,15 +80,30 @@
           </mat-form-field>
           }
           @case ('color'){
-          <!-- TODO: Verificar o evento que não está disparando enquanto muda a cor e dispara quando termina da selecionar -->
+          <!-- TODO: Bug de performance na função `prop.upValue($event.target.value);`, ele deixa a UI travada -->
           <mat-form-field floatLabel="always" appearance="outline">
             <mat-label [ngClass]="labelCls(prop)">{{prop.getLabel()}}</mat-label>
-            <input matNativeControl type="color" [value]="prop.getValue()" (input)="colorChange($event,prop)">
+            <input matNativeControl type="color" [value]="prop.getValue()" (change)="colorChange($event,prop)">
             <button mat-icon-button matIconSuffix [attr.aria-label]="'Clear style'" *ngIf="prop.canClear()"
               (click)="prop.clear()">
               <mat-icon>close</mat-icon>
             </button>
           </mat-form-field>
+          }
+          @case ('slider'){
+            <mat-label [ngClass]="labelCls(prop)">{{prop.getLabel()}}</mat-label>
+            <mat-slider
+              [min]="getMin(prop)"
+              [max]="getMax(prop)"
+              [step]="getStep(prop)"
+              (change)="handleChange($event,prop)"
+              [discrete]="true"
+              [displayWith]="sliderDisplayWith">
+              <input [value]="getValue(prop)" matSliderThumb>
+            </mat-slider>
+          }
+          @case ('file'){
+            <button mat-raised-button color="primary">Select image</button>
           }
           @default {
           <mat-form-field floatLabel="always" appearance="outline">

@@ -10,6 +10,8 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import { MatRadioChange, MatRadioModule } from '@angular/material/radio';
+import { MatSliderModule } from '@angular/material/slider';
+
 //editor's const
 import { blockManager, styleManager, canvasCss } from './editorConfig';
 //pipes
@@ -30,7 +32,7 @@ import { grapesjs, Editor, Block, Sector, Property, PropertySelect, PropertyProp
     PipeObjectKeysPipe,
     MatRippleModule, MatExpansionModule, MatIconModule,
     MatFormFieldModule, MatInputModule, MatSelectModule,
-    MatButtonModule, MatRadioModule
+    MatButtonModule, MatRadioModule, MatSliderModule
   ],
   providers: [
     SanitizePipe,
@@ -75,7 +77,9 @@ export class EditorComponent implements OnInit {
       canvasCss
     })
 
-    this.editor.on('load', this.editorLoad)
+    this.editor.on('load', ()=>{
+      this.editorLoad();
+    })
 
     this.editor.on('block:custom', (props) => {
       this.editorBlockCustom(props);
@@ -87,6 +91,18 @@ export class EditorComponent implements OnInit {
   }
 
   editorLoad() {
+    this.editor.StyleManager.addSector("Fundo", {
+      name: "Novo Fundo",
+      open: false,
+      properties: [{
+          name: 'Background color',
+          property: 'container-background-color',
+          type: 'color',
+      }, {
+          property: 'background-url',
+          type: 'file',
+      }]
+  });
   }
 
   editorBlockCustom(props: any): void {
@@ -148,6 +164,10 @@ export class EditorComponent implements OnInit {
   getOptionLabel(prop: any, id: string) {
     return prop.getOptionLabel(id);
   }
+  getMin(prop:any){ return prop.getMin(); }
+  getMax(prop:any){ return prop.getMax(); }
+  getStep(prop:any){ return prop.getStep(); }
+  getValue(prop:any){ return prop.getValue(); }
   handleChange($event: any, prop: Property) {
     const value = ($event.target as HTMLInputElement).value;
     prop.upValue(value);
@@ -160,12 +180,21 @@ export class EditorComponent implements OnInit {
     const value = $event.value;
     prop.upValue(value);
   }
-  colorChange($event:any,prop:any){
-    console.log($event.target.value,prop);
+  colorChange($event: any, prop: any) {
+    console.log($event.target.value, prop);
     prop.upValue($event.target.value);
+  }
+  // [displayWith]="sliderDisplayWith"
+  // TODO: cada slider pode ter uma função displayWith diferente, exemplo: opacidade deve mostrar 65 ao invés de 0.65
+  sliderDisplayWith(value:number):string{
+    console.log(value)
+    return `${value}`;
   }
 
 
+  CHECKVALUES($event: any, prop: any){
+    console.log($event, prop);
+  }
 
   showProp(prop: Property) {
     console.log(prop);
