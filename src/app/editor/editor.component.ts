@@ -4,21 +4,21 @@ import { CommonModule } from '@angular/common';
 //material design
 import { MatRippleModule } from '@angular/material/core';
 import { MatExpansionModule } from '@angular/material/expansion';
-import { MatSelectModule } from '@angular/material/select';
+import { MatSelectChange, MatSelectModule } from '@angular/material/select';
 import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import { MatRadioChange, MatRadioModule } from '@angular/material/radio';
 //editor's const
-import { blockManager, styleManager } from './editorConfig';
+import { blockManager, styleManager, canvasCss } from './editorConfig';
 //pipes
 import { SanitizePipe } from '../shared/pipes/sanitize.pipe';
 import { PipeObjectKeysPipe } from '../shared/pipes/pipe-object-keys.pipe'
 //services
 import { UtilsService } from './services/utils.service';
 //thirds
-import { grapesjs, Editor, Block, Sector, Property, PropertySelect } from 'grapesjs';
+import { grapesjs, Editor, Block, Sector, Property, PropertySelect, PropertyProps } from 'grapesjs';
 //standalone components
 
 @Component({
@@ -45,7 +45,7 @@ export class EditorComponent implements OnInit {
   @ViewChild('blocksWrapper') blocksWrapper!: ElementRef;
   constructor(
     private utilSvc: UtilsService,
-    private cdr: ChangeDetectorRef,
+    // private cdr: ChangeDetectorRef,
   ) {
 
   }
@@ -71,7 +71,8 @@ export class EditorComponent implements OnInit {
       // panels: { defaults: [] },
       styleManager,
       // panels,
-      blockManager
+      blockManager,
+      canvasCss
     })
 
     this.editor.on('load', this.editorLoad)
@@ -106,7 +107,7 @@ export class EditorComponent implements OnInit {
   editorStyleCustom(props: any): void {
     this.editorCustomStyleManagerSectors = this.editor.StyleManager.getSectors({ visible: true });
     props.container.append(this.styleManagerWrapper.nativeElement);
-    this.cdr.detectChanges();
+    // this.cdr.detectChanges();
 
     // props.container (HTMLElement)
     //    The default element where you can append your
@@ -114,11 +115,15 @@ export class EditorComponent implements OnInit {
 
     // Here you would put the logic to render/update your UI by relying on Style Manager API
   }
-  // labelCls(prop: Property) {
-  //   const parent = prop.getParent();
-  //   const hasParentValue = prop.hasValueParent() && (parent ? parent.isDetached() : true);
-  //   return ['flex-nowrap', prop.canClear() && 'indigo--text text--accent-1', hasParentValue && 'orange--text'];
-  // }
+  labelCls(prop: Property) {
+    const parent = prop.getParent();
+    const hasParentValue = prop.hasValueParent() && (parent ? parent.isDetached() : true);
+
+    return {
+      'label-style-selected': prop.canClear(),
+      'label-style-parent-selected': hasParentValue
+    }
+  }
   inputValue(prop: Property) {
     return prop.hasValue() ? prop.getValue() : '';
   }
@@ -131,30 +136,39 @@ export class EditorComponent implements OnInit {
   defValue(prop: Property) {
     return prop.getDefaultValue();
   }
-  toOptions(prop: PropertySelect) {
-    return prop.getOptions().map(o => ({ value: prop.getOptionId(o), text: prop.getOptionLabel(o) }))
+  toOptions(prop: any) {
+    return prop.getOptions().map((o: any) => ({ value: prop.getOptionId(o), text: prop.getOptionLabel(o) }))
   }
-  getRawOptions(prop:any){
+  getRawOptions(prop: any) {
     return prop.getOptions();
   }
-  getOptionId(prop:any, id:string){
+  getOptionId(prop: any, id: string) {
     return prop.getOptionId(id);
   }
-  getOptionLabel(prop:any, id:string){
+  getOptionLabel(prop: any, id: string) {
     return prop.getOptionLabel(id);
   }
-
-  handleChange($event: Event, prop: Property) {
+  handleChange($event: any, prop: Property) {
     const value = ($event.target as HTMLInputElement).value;
+    prop.upValue(value);
+  }
+  handleSelectChange($event: MatSelectChange, prop: Property) {
+    const value = $event.value;
     prop.upValue(value);
   }
   handleRadioChange($event: MatRadioChange, prop: Property) {
     const value = $event.value;
     prop.upValue(value);
   }
-  handleNumberChange($event: Event, prop: Property) {
-    const value = ($event.target as HTMLInputElement).value;
-    console.log($event, prop);
-    prop.upValue(value);
+  colorChange($event:any,prop:any){
+    console.log($event.target.value,prop);
+    prop.upValue($event.target.value);
+  }
+
+
+
+  showProp(prop: Property) {
+    console.log(prop);
+    console.log('toOptions', this.toOptions(prop))
   }
 }

@@ -1,13 +1,17 @@
 <div class="panel__top">
   <div class="panel__basic-actions"></div>
 </div>
-<div id="gjs">
+<div id="gjs" style="background-color:#c4c4c4">
   <h1>Hello World Component!</h1>
 </div>
 
 <!-- Block Manager -->
 <div style="display: block;">
   <div class="blocks-wrp" #blocksWrapper>
+    <!--
+      TODO: Verificar porque ele só muda a lista quando move o muouse
+      - Aplicar o changeDetectRef aqui faz com que o resto não fique automático
+     -->
     <mat-accordion *ngIf="editorCustomBlocksCategorys">
       <mat-expansion-panel *ngFor="let category of editorCustomBlocksCategorys | pipeObjectKeys">
         <mat-expansion-panel-header>
@@ -32,7 +36,7 @@
 </div>
 
 <!-- Style Manager -->
-<div style="">
+<div style="display:block">
   <div class="style-manager" #styleManagerWrapper>
     <mat-accordion *ngIf="editorCustomStyleManagerSectors">
       <mat-expansion-panel *ngFor="let sector of editorCustomStyleManagerSectors">
@@ -46,8 +50,9 @@
           @switch(prop.getType()){
           @case('number'){
           <mat-form-field floatLabel="always" appearance="outline">
-            <mat-label>{{prop.getLabel()}}</mat-label>
-            <input matInput type="number" [placeholder]="this.defValue(prop)" (change)="handleChange($event,prop)">
+            <mat-label [ngClass]="labelCls(prop)">{{prop.getLabel()}}</mat-label>
+            <input matInput type="number" [placeholder]="defValue(prop)" [value]="prop.getValue()"
+              (change)="handleChange($event,prop)">
             <button mat-icon-button matIconSuffix [attr.aria-label]="'Clear style'" *ngIf="prop.canClear()"
               (click)="prop.clear()">
               <mat-icon>close</mat-icon>
@@ -55,17 +60,41 @@
           </mat-form-field>
           }
           @case ('radio'){
-          <label class="example-radio-group-label">{{prop.getLabel()}}</label>
-          <mat-radio-group aria-labelledby="Radio button lists" class="example-radio-group" (change)="handleRadioChange($event,prop)">
+          <label class="example-radio-group-label" [ngClass]="labelCls(prop)">{{prop.getLabel()}}</label>
+          <mat-radio-group aria-labelledby="Radio button lists" class="example-radio-group"
+            (change)="handleRadioChange($event,prop)">
             @for (opt of getRawOptions(prop); track opt.id) {
-              <mat-radio-button class="example-radio-button" [name]="prop.getLabel()" [value]="opt.id">{{getOptionLabel(prop,opt.id)}}</mat-radio-button>
+            <mat-radio-button class="example-radio-button" [name]="prop.getLabel()"
+              [value]="opt.id">{{getOptionLabel(prop,opt.id)}}</mat-radio-button>
             }
           </mat-radio-group>
           }
+          @case ('select'){
+          <mat-form-field>
+            <label [ngClass]="labelCls(prop)" (click)="showProp(prop)">{{prop.getLabel()}}</label>
+            <mat-select (selectionChange)="handleSelectChange($event,prop)">
+              @for (opt of toOptions(prop); track opt.id) {
+              <mat-option class="example-radio-button" [value]="opt.value">{{opt.text}}</mat-option>
+              }
+            </mat-select>
+          </mat-form-field>
+          }
+          @case ('color'){
+          <!-- TODO: Verificar o evento que não está disparando enquanto muda a cor e dispara quando termina da selecionar -->
+          <mat-form-field floatLabel="always" appearance="outline">
+            <mat-label [ngClass]="labelCls(prop)">{{prop.getLabel()}}</mat-label>
+            <input matNativeControl type="color" [value]="prop.getValue()" (input)="colorChange($event,prop)">
+            <button mat-icon-button matIconSuffix [attr.aria-label]="'Clear style'" *ngIf="prop.canClear()"
+              (click)="prop.clear()">
+              <mat-icon>close</mat-icon>
+            </button>
+          </mat-form-field>
+          }
           @default {
           <mat-form-field floatLabel="always" appearance="outline">
-            <mat-label>{{prop.getLabel()}}</mat-label>
-            <input matInput [placeholder]="this.defValue(prop)" (change)="handleChange($event,prop)">
+            <mat-label [ngClass]="labelCls(prop)">{{prop.getLabel()}}</mat-label>
+            <input matInput [placeholder]="this.defValue(prop)" [value]="prop.getValue()"
+              (change)="handleChange($event,prop)">
             <button mat-icon-button matIconSuffix [attr.aria-label]="'Clear style'" *ngIf="prop.canClear()"
               (click)="prop.clear()">
               <mat-icon>close</mat-icon>
