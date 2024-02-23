@@ -1,0 +1,53 @@
+<mat-accordion *ngIf="Sectors">
+  <mat-expansion-panel *ngFor="let sector of Sectors">
+    <mat-expansion-panel-header>
+      <mat-panel-title>
+        {{sector.getName()}}
+      </mat-panel-title>
+    </mat-expansion-panel-header>
+    <div class="styles" *ngFor="let prop of sector.getProperties()">
+
+      @switch(prop.getType()){
+      @case('number'){
+        <app-field-number [labelCls]="labelCls" [prop]="prop"></app-field-number>
+      }
+      @case ('radio'){
+        <app-field-radio [labelCls]="labelCls" [prop]="prop"></app-field-radio>
+      }
+      @case ('select'){
+
+      }
+      @case ('color'){
+      <!-- TODO: Bug de performance na função `prop.upValue($event.target.value);`, ele deixa a UI travada -->
+      <mat-form-field floatLabel="always" appearance="outline">
+        <mat-label [ngClass]="labelCls(prop)">{{prop.getLabel()}}</mat-label>
+        <input matNativeControl type="color" [value]="prop.getValue()" (change)="colorChange($event,prop)">
+        <button mat-icon-button matIconSuffix [attr.aria-label]="'Clear style'" *ngIf="prop.canClear()"
+          (click)="prop.clear()">
+          <mat-icon>close</mat-icon>
+        </button>
+      </mat-form-field>
+      }
+      @case ('slider'){
+        <app-field-slider [prop]="prop" [labelCls]="labelCls"></app-field-slider>
+      }
+      @case ('file'){
+      <button class="button-with-background-image" mat-raised-button color="primary" (click)="openAssets(prop)">
+        <span *ngIf="prop.getValue()" [ngStyle]="{ 'background-image': 'url(' + prop.getValue() + ')' }"></span>
+        Select image
+      </button>
+      }
+      @case ('composite'){
+      <span>{{prop.getLabel()}}: Composite não está pronto ainda</span>
+      }
+      @case ('stack'){
+      <span>{{prop.getLabel()}}: Stack não está pronto ainda</span>
+      }
+      @default {
+        <app-field-default [labelCls]="labelCls" [prop]="prop"></app-field-default>
+      }
+      }
+
+    </div>
+  </mat-expansion-panel>
+</mat-accordion>

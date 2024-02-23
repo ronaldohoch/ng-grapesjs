@@ -2,3 +2,20 @@
 
 html, body { height: 100%; }
 body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+
+/* sobrescrever material design */
+/* button background image */
+.button-with-background-image{
+  .mdc-button__label{
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+    align-items: center;
+    > span{
+      display: block;
+      width: 15px;
+      height: 15px;
+      background-size: cover;
+    }
+  }
+}

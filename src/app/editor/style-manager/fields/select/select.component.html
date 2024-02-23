@@ -1,0 +1,8 @@
+<mat-form-field>
+  <label [ngClass]="labelCls(prop)">{{prop.getLabel()}}</label>
+  <mat-select (selectionChange)="handleSelectChange($event)">
+    @for (opt of toOptions(); track opt.id) {
+    <mat-option class="example-radio-button" [value]="opt.value">{{opt.text}}</mat-option>
+    }
+  </mat-select>
+</mat-form-field>

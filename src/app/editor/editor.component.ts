@@ -22,6 +22,7 @@ import { UtilsService } from './services/utils.service';
 //thirds
 import { grapesjs, Editor, Block, Sector, Property, PropertySelect, PropertyProps } from 'grapesjs';
 //standalone components
+import { StyleManagerComponent } from './style-manager/style-manager.component';
 
 @Component({
   selector: 'app-editor',
@@ -30,9 +31,10 @@ import { grapesjs, Editor, Block, Sector, Property, PropertySelect, PropertyProp
     CommonModule,
     SanitizePipe,
     PipeObjectKeysPipe,
+    StyleManagerComponent,
     MatRippleModule, MatExpansionModule, MatIconModule,
     MatFormFieldModule, MatInputModule, MatSelectModule,
-    MatButtonModule, MatRadioModule, MatSliderModule
+    MatButtonModule, MatRadioModule, MatSliderModule,
   ],
   providers: [
     SanitizePipe,
@@ -76,8 +78,10 @@ export class EditorComponent implements OnInit {
       blockManager,
       canvasCss
     })
+    //@ts-ignore
+    window.editor = this.editor;
 
-    this.editor.on('load', ()=>{
+    this.editor.on('load', () => {
       this.editorLoad();
     })
 
@@ -88,6 +92,23 @@ export class EditorComponent implements OnInit {
     this.editor.on('style:custom', props => {
       this.editorStyleCustom(props);
     });
+
+    // Use this event to append your UI in the default container provided by GrapesJS.
+    // You can skip this event if you don't rely on the core panels and decide to
+    // place the UI in some other place.
+    this.editor.on('layer:custom', (props) => {
+      // props.container (HTMLElement) - The default element where you can append your UI
+    });
+
+    // Triggered when the root layer is changed.
+    this.editor.on('layer:root', (root) => {
+      // Update the root of your UI
+    });
+
+    // Triggered when a component is updated, this allows you to update specific layers.
+    this.editor.on('layer:component', (component) => {
+      // Update the specific layer of your UI
+    });
   }
 
   editorLoad() {
@@ -95,14 +116,15 @@ export class EditorComponent implements OnInit {
       name: "Novo Fundo",
       open: false,
       properties: [{
-          name: 'Background color',
-          property: 'container-background-color',
-          type: 'color',
+        name: 'Background color',
+        property: 'container-background-color',
+        type: 'color',
       }, {
-          property: 'background-url',
-          type: 'file',
+        property: 'background-image',
+        type: 'file',
+        functionName:'url'
       }]
-  });
+    });
   }
 
   editorBlockCustom(props: any): void {
@@ -130,74 +152,5 @@ export class EditorComponent implements OnInit {
     //    custom UI in order to render it in the default position.
 
     // Here you would put the logic to render/update your UI by relying on Style Manager API
-  }
-  labelCls(prop: Property) {
-    const parent = prop.getParent();
-    const hasParentValue = prop.hasValueParent() && (parent ? parent.isDetached() : true);
-
-    return {
-      'label-style-selected': prop.canClear(),
-      'label-style-parent-selected': hasParentValue
-    }
-  }
-  inputValue(prop: Property) {
-    return prop.hasValue() ? prop.getValue() : '';
-  }
-  propName(prop: Property) {
-    return prop.getName();
-  }
-  propType(prop: Property) {
-    return prop.getType();
-  }
-  defValue(prop: Property) {
-    return prop.getDefaultValue();
-  }
-  toOptions(prop: any) {
-    return prop.getOptions().map((o: any) => ({ value: prop.getOptionId(o), text: prop.getOptionLabel(o) }))
-  }
-  getRawOptions(prop: any) {
-    return prop.getOptions();
-  }
-  getOptionId(prop: any, id: string) {
-    return prop.getOptionId(id);
-  }
-  getOptionLabel(prop: any, id: string) {
-    return prop.getOptionLabel(id);
-  }
-  getMin(prop:any){ return prop.getMin(); }
-  getMax(prop:any){ return prop.getMax(); }
-  getStep(prop:any){ return prop.getStep(); }
-  getValue(prop:any){ return prop.getValue(); }
-  handleChange($event: any, prop: Property) {
-    const value = ($event.target as HTMLInputElement).value;
-    prop.upValue(value);
-  }
-  handleSelectChange($event: MatSelectChange, prop: Property) {
-    const value = $event.value;
-    prop.upValue(value);
-  }
-  handleRadioChange($event: MatRadioChange, prop: Property) {
-    const value = $event.value;
-    prop.upValue(value);
-  }
-  colorChange($event: any, prop: any) {
-    console.log($event.target.value, prop);
-    prop.upValue($event.target.value);
-  }
-  // [displayWith]="sliderDisplayWith"
-  // TODO: cada slider pode ter uma função displayWith diferente, exemplo: opacidade deve mostrar 65 ao invés de 0.65
-  sliderDisplayWith(value:number):string{
-    console.log(value)
-    return `${value}`;
-  }
-
-
-  CHECKVALUES($event: any, prop: any){
-    console.log($event, prop);
-  }
-
-  showProp(prop: Property) {
-    console.log(prop);
-    console.log('toOptions', this.toOptions(prop))
   }
 }

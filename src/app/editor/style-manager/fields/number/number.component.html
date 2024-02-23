@@ -1,0 +1,9 @@
+<mat-form-field floatLabel="always" appearance="outline">
+  <mat-label [ngClass]="labelCls(prop)">{{prop.getLabel()}}</mat-label>
+  <input matInput type="number" [placeholder]="prop.getDefaultValue" [value]="prop.getValue()"
+    (change)="handleChange($event)">
+  <button mat-icon-button matIconSuffix [attr.aria-label]="'Clear style'" *ngIf="prop.canClear()"
+    (click)="prop.clear()">
+    <mat-icon>close</mat-icon>
+  </button>
+</mat-form-field>

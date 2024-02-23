@@ -1,8 +1,15 @@
+<div class="new-panels">
+  <ul>
+    <li></li>
+  </ul>
+</div>
 <div class="panel__top">
   <div class="panel__basic-actions"></div>
 </div>
 <div id="gjs" style="background-color:#c4c4c4">
-  <h1>Hello World Component!</h1>
+  <div style="margin:2em;padding:1em;border:1px solid black;">
+    <h1>Hello World Component!</h1>
+  </div>
 </div>
 
 <!-- Block Manager -->
@@ -38,88 +45,10 @@
 <!-- Style Manager -->
 <div style="display:block">
   <div class="style-manager" #styleManagerWrapper>
-    <mat-accordion *ngIf="editorCustomStyleManagerSectors">
-      <mat-expansion-panel *ngFor="let sector of editorCustomStyleManagerSectors">
-        <mat-expansion-panel-header>
-          <mat-panel-title>
-            {{sector.getName()}}
-          </mat-panel-title>
-        </mat-expansion-panel-header>
-        <div class="styles" *ngFor="let prop of sector.getProperties()">
 
-          @switch(prop.getType()){
-          @case('number'){
-          <mat-form-field floatLabel="always" appearance="outline">
-            <mat-label [ngClass]="labelCls(prop)">{{prop.getLabel()}}</mat-label>
-            <input matInput type="number" [placeholder]="defValue(prop)" [value]="prop.getValue()"
-              (change)="handleChange($event,prop)">
-            <button mat-icon-button matIconSuffix [attr.aria-label]="'Clear style'" *ngIf="prop.canClear()"
-              (click)="prop.clear()">
-              <mat-icon>close</mat-icon>
-            </button>
-          </mat-form-field>
-          }
-          @case ('radio'){
-          <label class="example-radio-group-label" [ngClass]="labelCls(prop)">{{prop.getLabel()}}</label>
-          <mat-radio-group aria-labelledby="Radio button lists" class="example-radio-group"
-            (change)="handleRadioChange($event,prop)">
-            @for (opt of getRawOptions(prop); track opt.id) {
-            <mat-radio-button class="example-radio-button" [name]="prop.getLabel()"
-              [value]="opt.id">{{getOptionLabel(prop,opt.id)}}</mat-radio-button>
-            }
-          </mat-radio-group>
-          }
-          @case ('select'){
-          <mat-form-field>
-            <label [ngClass]="labelCls(prop)" (click)="showProp(prop)">{{prop.getLabel()}}</label>
-            <mat-select (selectionChange)="handleSelectChange($event,prop)">
-              @for (opt of toOptions(prop); track opt.id) {
-              <mat-option class="example-radio-button" [value]="opt.value">{{opt.text}}</mat-option>
-              }
-            </mat-select>
-          </mat-form-field>
-          }
-          @case ('color'){
-          <!-- TODO: Bug de performance na função `prop.upValue($event.target.value);`, ele deixa a UI travada -->
-          <mat-form-field floatLabel="always" appearance="outline">
-            <mat-label [ngClass]="labelCls(prop)">{{prop.getLabel()}}</mat-label>
-            <input matNativeControl type="color" [value]="prop.getValue()" (change)="colorChange($event,prop)">
-            <button mat-icon-button matIconSuffix [attr.aria-label]="'Clear style'" *ngIf="prop.canClear()"
-              (click)="prop.clear()">
-              <mat-icon>close</mat-icon>
-            </button>
-          </mat-form-field>
-          }
-          @case ('slider'){
-            <mat-label [ngClass]="labelCls(prop)">{{prop.getLabel()}}</mat-label>
-            <mat-slider
-              [min]="getMin(prop)"
-              [max]="getMax(prop)"
-              [step]="getStep(prop)"
-              (change)="handleChange($event,prop)"
-              [discrete]="true"
-              [displayWith]="sliderDisplayWith">
-              <input [value]="getValue(prop)" matSliderThumb>
-            </mat-slider>
-          }
-          @case ('file'){
-            <button mat-raised-button color="primary">Select image</button>
-          }
-          @default {
-          <mat-form-field floatLabel="always" appearance="outline">
-            <mat-label [ngClass]="labelCls(prop)">{{prop.getLabel()}}</mat-label>
-            <input matInput [placeholder]="this.defValue(prop)" [value]="prop.getValue()"
-              (change)="handleChange($event,prop)">
-            <button mat-icon-button matIconSuffix [attr.aria-label]="'Clear style'" *ngIf="prop.canClear()"
-              (click)="prop.clear()">
-              <mat-icon>close</mat-icon>
-            </button>
-          </mat-form-field>
-          }
-          }
+    <app-style-manager
+      [editor]="editor"
+      [Sectors]="editorCustomStyleManagerSectors"></app-style-manager>
 
-        </div>
-      </mat-expansion-panel>
-    </mat-accordion>
   </div>
 </div>

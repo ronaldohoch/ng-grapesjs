@@ -1,0 +1,5 @@
+<mat-label [ngClass]="labelCls(prop)">{{prop.getLabel()}}</mat-label>
+<mat-slider [min]="prop.getMin()" [max]="prop.getMax()" [step]="prop.getStep()" (change)="handleChange($event)"
+  [discrete]="true" [displayWith]="sliderDisplayWith">
+  <input [value]="prop.getValue()" matSliderThumb>
+</mat-slider>
