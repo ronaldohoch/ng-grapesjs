@@ -1,1 +1,29 @@
-<p>stack works!</p>
+<span>{{prop.getLabel()}}: Stack não está pronto ainda</span>
+
+<!-- <div v-else-if="propType === 'stack'">
+  <div class="sm-type-cmp pa-3">
+    <v-icon @click="prop.addLayer({}, { at: 0 })" class="sm-add-layer" small>mdi-plus</v-icon>
+    <v-row class="sm-layer" v-for="layer in prop.getLayers()" :key="layer.getId()">
+      <v-col>
+        <v-row>
+          <v-col cols="auto" class="pr-1">
+            <v-icon @click="layer.move(layer.getIndex() - 1)" small>mdi-arrow-up</v-icon>
+          </v-col>
+          <v-col cols="auto" class="pl-1">
+            <v-icon @click="layer.move(layer.getIndex() + 1)" small>mdi-arrow-down</v-icon>
+          </v-col>
+          <v-col @click="layer.select()">{{ layer.getLabel() }}</v-col>
+          <v-col cols="auto">
+            <div :class="['sm-layer-prv white', `sm-layer-prv--${propName}`]" :style="layer.getStylePreview({ number: { min: -3, max: 3 } })"></div>
+          </v-col>
+          <v-col cols="auto">
+            <v-icon @click="layer.remove()" small>mdi-close</v-icon>
+          </v-col>
+        </v-row>
+        <v-row v-if="layer.isSelected()" no-gutters class="sm-type-cmp pa-2 mt-3">
+          <property-field v-for="p in prop.getProperties()" :key="p.getId()" :prop="p"/>
+        </v-row>
+      </v-col>
+    </v-row>
+  </div>
+</div> -->

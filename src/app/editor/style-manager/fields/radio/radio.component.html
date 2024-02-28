@@ -1,8 +1,24 @@
-<label class="example-radio-group-label" [ngClass]="labelCls(prop)">{{prop.getLabel()}}</label>
-<mat-radio-group aria-labelledby="Radio button lists" class="example-radio-group"
-  (change)="handleRadioChange($event)">
-  @for (opt of prop.getOptions(); track opt.id) {
-  <mat-radio-button class="example-radio-button" [name]="prop.getLabel()"
-    [value]="opt.id">{{prop.getOptionLabel(opt.id)}}</mat-radio-button>
-  }
-</mat-radio-group>
+<label class="example-radio-group-label" [ngClass]="labelCls(prop)">
+  {{prop.getLabel()}}
+
+  <button matIconSuffix [attr.aria-label]="'Clear style'" *ngIf="prop.canClear()" (click)="prop.clear()">
+    <mat-icon>close</mat-icon>
+  </button>
+</label>
+
+@switch (prop.getId()) {
+@case('float'){
+  <app-float [prop]="prop"></app-float>
+}
+@case('position'){
+  <app-position [prop]="prop"></app-position>
+}
+@default{
+  <mat-radio-group aria-labelledby="Radio button lists" class="example-radio-group" (change)="handleRadioChange($event)">
+    @for (opt of prop.getOptions(); track opt.id) {
+    <mat-radio-button class="example-radio-button" [name]="prop.getLabel()"
+      [value]="opt.id">{{prop.getOptionLabel(opt.id)}}</mat-radio-button>
+    }
+  </mat-radio-group>
+}
+}

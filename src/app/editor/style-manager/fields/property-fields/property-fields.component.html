@@ -1,0 +1,37 @@
+@switch(prop.getType()){
+  @case('number'){
+  <app-field-number [labelCls]="labelCls" [prop]="prop"></app-field-number>
+  }
+  @case ('radio'){
+  <app-field-radio [labelCls]="labelCls" [prop]="prop"></app-field-radio>
+  }
+  @case ('select'){
+  <app-field-select [labelCls]="labelCls" [prop]="prop"></app-field-select>
+  }
+  @case ('color'){
+  <app-field-color [labelCls]="labelCls" [prop]="prop"></app-field-color>
+  }
+  @case ('slider'){
+  <app-field-slider [labelCls]="labelCls" [prop]="prop"></app-field-slider>
+  }
+  @case ('file'){
+  <app-field-button [labelCls]="labelCls" [prop]="prop" [editor]="editor"></app-field-button>
+  }
+  @case ('composite'){
+    <div style="">
+
+    </div>
+    <div style="border:1px solid black;" *ngFor="let compositeProp of prop.getProperties()">
+      <p>{{prop.getLabel()}}</p>
+      <app-property-fields
+        [prop]="compositeProp"
+        [editor]="editor"></app-property-fields>
+    </div>
+  }
+  @case ('stack'){
+  <app-field-stack [labelCls]="labelCls" [prop]="prop"></app-field-stack>
+  }
+  @default {
+  <app-field-default [labelCls]="labelCls" [prop]="prop"></app-field-default>
+  }
+}

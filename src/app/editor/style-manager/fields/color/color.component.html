@@ -1,1 +1,9 @@
-<p>color works!</p>
+<!-- TODO: Bug de performance na função `prop.upValue($event.target.value);`, ele deixa a UI travada -->
+<mat-form-field floatLabel="always" appearance="outline">
+  <mat-label [ngClass]="labelCls(prop)">{{prop.getLabel()}}</mat-label>
+  <input matNativeControl type="color" [value]="prop.getValue()" (change)="colorChange($event)">
+  <button mat-icon-button matIconSuffix [attr.aria-label]="'Clear style'" *ngIf="prop.canClear()"
+    (click)="prop.clear()">
+    <mat-icon>close</mat-icon>
+  </button>
+</mat-form-field>

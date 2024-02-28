@@ -1,0 +1,5 @@
+<mat-button-toggle-group [name]="prop.getLabel()" aria-label="Font Style" (change)="handleChange($event)">
+  @for (opt of prop.getOptions(); track opt.id) {
+  <mat-button-toggle [value]="opt.id">{{prop.getOptionLabel(opt.id)}}</mat-button-toggle>
+  }
+</mat-button-toggle-group>

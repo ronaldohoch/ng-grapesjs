@@ -1,9 +1,21 @@
 <mat-form-field floatLabel="always" appearance="outline">
   <mat-label [ngClass]="labelCls(prop)">{{prop.getLabel()}}</mat-label>
-  <input matInput type="number" [placeholder]="prop.getDefaultValue" [value]="prop.getValue()"
-    (change)="handleChange($event)">
-  <button mat-icon-button matIconSuffix [attr.aria-label]="'Clear style'" *ngIf="prop.canClear()"
-    (click)="prop.clear()">
-    <mat-icon>close</mat-icon>
+
+  <button mat-icon-button matPrefix>
+    <mat-icon>remove</mat-icon>
+  </button>
+
+  <input matInput type="text" [placeholder]="prop.getDefaultValue()" [value]="prop.getValue()" #componentInput
+    (mousedown)="handleMouseDown()" (mouseup)="handleMouseUp()">
+
+    <!-- (click)="" -->
+  <button mat-icon-button matSuffix (click)="handlePlusEvent()">
+    <mat-icon>add</mat-icon>
   </button>
 </mat-form-field>
+<!--
+
+
+<button mat-icon-button matIconSuffix [attr.aria-label]="'Clear style'" *ngIf="prop.canClear()" (click)="prop.clear()">
+  <mat-icon>close</mat-icon>
+</button> -->

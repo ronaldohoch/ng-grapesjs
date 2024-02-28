@@ -1,4 +1,4 @@
-import { Component, ElementRef, OnInit, ViewChild, ChangeDetectorRef } from '@angular/core';
+import { Component, ElementRef, OnInit, ViewChild, Renderer2 } from '@angular/core';
 import { DomSanitizer } from '@angular/platform-browser';
 import { CommonModule } from '@angular/common';
 //material design
@@ -49,6 +49,7 @@ export class EditorComponent implements OnInit {
   @ViewChild('blocksWrapper') blocksWrapper!: ElementRef;
   constructor(
     private utilSvc: UtilsService,
+    private renderer: Renderer2
     // private cdr: ChangeDetectorRef,
   ) {
 
@@ -137,7 +138,8 @@ export class EditorComponent implements OnInit {
     this.editorCustomBlocksOnDragStop = function (block: any) {
       props.dragStop(block);
     };
-    props.container.append(this.blocksWrapper.nativeElement);
+    this.renderer.appendChild(props.container,this.blocksWrapper.nativeElement)
+    // props.container.append(this.blocksWrapper.nativeElement);
   }
 
   editorCustomStyleManagerSectors!: Sector[];

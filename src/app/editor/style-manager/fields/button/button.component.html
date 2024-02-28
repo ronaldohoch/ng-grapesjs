@@ -1,0 +1,4 @@
+<button class="button-with-background-image" mat-raised-button color="primary" (click)="openAssets(prop)">
+  <span *ngIf="prop.getValue()" [ngStyle]="{ 'background-image': 'url(' + prop.getValue() + ')' }"></span>
+  Select image
+</button>
